@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!-- 环境变量 -->
+	<springProperty name="logLevel" scope="context" source="logging.level.root" />
+	<springProperty name="logPath" scope="context" source="logging.path" />
+
+	<!-- 控制台输出 -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%d [%thread] %-5level %logger{50} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 文件输出 -->
+	<appender name="dailyRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/current.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logPath}/history.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<!-- 7天的文件 -->
+			<maxHistory>7</maxHistory>
+			<!-- 上限大小，最大不超过10GB -->
+			<totalSizeCap>10GB</totalSizeCap>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%thread] %-5level %logger{50} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- error级别错误日志文件 -->
+	<appender name="errorDailyRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/error.log</file>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logPath}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<!-- 7天的文件 -->
+			<maxHistory>7</maxHistory>
+			<!-- 上限大小，最大不超过10GB -->
+			<totalSizeCap>2GB</totalSizeCap>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%thread] %-5level %logger{50} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- 日志输出级别 -->
+	<root level="${logLevel}">
+		<appender-ref ref="console" />
+		<appender-ref ref="dailyRolling" />
+		<appender-ref ref="errorDailyRolling" />
+	</root>
+</configuration>

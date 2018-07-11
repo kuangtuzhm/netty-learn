@@ -47,11 +47,14 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+    	
+
          // 收到消息直接打印输出
-    System.out.println(ctx.channel().remoteAddress() + " Say : " + msg);
+    	logger.info(ctx.channel().remoteAddress() + " Say : " + msg);
            
            // 返回客户端消息 - 我已经接收到了你的消息
             ctx.writeAndFlush("Received your message !\n");
+    		
     }
 
          /*
@@ -69,4 +72,11 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<String> {
              
              super.channelActive(ctx);
          }
+
+		@Override
+		public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
+				throws Exception {
+			ctx.close();
+			logger.error("handler error:", cause);
+		}
 }

@@ -13,5 +13,6 @@
   <modules>
   	<module>netty-learn-server</module>
     <module>netty-learn-client</module>
+    <module>netty-learn-client-pool</module>
   </modules>
 </project>
