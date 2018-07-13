@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -32,6 +33,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
  * @author Zhao Haiming
  * @version 1.0
  */
+@Component
 public class NettyClientHander extends ChannelInboundHandlerAdapter {
 	
 	private Logger logger = LoggerFactory.getLogger(NettyClientHander.class);

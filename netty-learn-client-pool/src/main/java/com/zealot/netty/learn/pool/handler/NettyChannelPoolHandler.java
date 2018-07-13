@@ -16,10 +16,14 @@
 
 package com.zealot.netty.learn.pool.handler;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.zealot.netty.learn.client.handler.NettyClientHander;
+import com.zealot.netty.learn.common.protocol.ProtocolCodec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -38,9 +42,13 @@ import io.netty.handler.codec.string.StringEncoder;
  * @author Zhao Haiming
  * @version 1.0
  */
+@Component
 public class NettyChannelPoolHandler implements ChannelPoolHandler {
 	
 	private Logger logger = LoggerFactory.getLogger(NettyChannelPoolHandler.class);
+	
+	@Resource
+	private NettyClientHander nettyClientHander;
 
 	@Override
 	public void channelReleased(Channel ch) throws Exception {
@@ -63,7 +71,7 @@ public class NettyChannelPoolHandler implements ChannelPoolHandler {
         channel.config().setTcpNoDelay(true);
         channel.pipeline()
                 .addLast(new DelimiterBasedFrameDecoder(1024, delimiter))
-                .addLast(new StringDecoder()).addLast(new StringEncoder()).addLast(new NettyClientHander());
+                .addLast(new ProtocolCodec()).addLast(nettyClientHander);
 	}
 
 }
