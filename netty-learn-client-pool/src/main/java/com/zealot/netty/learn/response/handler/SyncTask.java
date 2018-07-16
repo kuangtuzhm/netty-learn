@@ -1,20 +1,22 @@
 package com.zealot.netty.learn.response.handler;
 
-import java.util.Map;
 import java.util.concurrent.locks.Condition;
+
+import com.zealot.netty.learn.bean.MessageBean;
 
 public class SyncTask {
     
-    private Map<String,String> result;
-    private Condition complete;
+    private MessageBean result;
     
-    public Map<String, String> getResult() {
-        return result;
-    }
-    public void setResult(Map<String, String> result) {
-        this.result = result;
-    }
-    public Condition getComplete() {
+    private Condition complete;
+
+	public MessageBean getResult() {
+		return result;
+	}
+	public void setResult(MessageBean result) {
+		this.result = result;
+	}
+	public Condition getComplete() {
         return complete;
     }
     public void setComplete(Condition complete) {

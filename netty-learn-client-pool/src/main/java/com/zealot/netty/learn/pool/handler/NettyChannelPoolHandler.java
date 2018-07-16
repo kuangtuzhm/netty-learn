@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.zealot.netty.learn.client.handler.NettyClientHander;
-import com.zealot.netty.learn.common.protocol.ProtocolCodec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -31,6 +30,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.pool.ChannelPoolHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
@@ -47,8 +47,8 @@ public class NettyChannelPoolHandler implements ChannelPoolHandler {
 	
 	private Logger logger = LoggerFactory.getLogger(NettyChannelPoolHandler.class);
 	
-	@Resource
-	private NettyClientHander nettyClientHander;
+//	@Resource
+//	private NettyClientHander nettyClientHander;
 
 	@Override
 	public void channelReleased(Channel ch) throws Exception {
@@ -64,14 +64,14 @@ public class NettyChannelPoolHandler implements ChannelPoolHandler {
 	@Override
 	public void channelCreated(Channel ch) throws Exception {
 		
-		ByteBuf delimiter = Unpooled.copiedBuffer("$_".getBytes());
 		logger.info("channelCreated. Channel ID: " + ch.id());
         SocketChannel channel = (SocketChannel) ch;
         channel.config().setKeepAlive(true);
         channel.config().setTcpNoDelay(true);
         channel.pipeline()
-                .addLast(new DelimiterBasedFrameDecoder(1024, delimiter))
-                .addLast(new ProtocolCodec()).addLast(nettyClientHander);
+//                .addLast(new DelimiterBasedFrameDecoder(8192,
+//        				Delimiters.lineDelimiter()))
+                .addLast(new StringDecoder()).addLast(new StringEncoder()).addLast(new NettyClientHander());
 	}
 
 }

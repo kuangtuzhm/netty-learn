@@ -1,6 +1,6 @@
 package com.zealot.netty.learn.response.handler;
 
-import java.util.Map;
+import com.zealot.netty.learn.bean.MessageBean;
 
 public interface ResponseHandler {
     
@@ -10,5 +10,5 @@ public interface ResponseHandler {
      * @param response 响应消息 
      * @throws InterruptedException 
      */
-    public void onMsg(String imei,Map<String,String> response) throws InterruptedException ;
+    public void onMsg(MessageBean bean) throws InterruptedException ;
 }

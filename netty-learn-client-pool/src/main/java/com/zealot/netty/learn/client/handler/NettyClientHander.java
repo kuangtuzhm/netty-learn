@@ -18,12 +18,19 @@ package com.zealot.netty.learn.client.handler;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.JSON;
+import com.zealot.netty.learn.bean.MessageBean;
+import com.zealot.netty.learn.cache.GuavaCache;
+import com.zealot.netty.learn.response.handler.ResponseHandler;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
  * @FileName NettyClientHander.java
@@ -33,15 +40,48 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
  * @author Zhao Haiming
  * @version 1.0
  */
-@Component
-public class NettyClientHander extends ChannelInboundHandlerAdapter {
+
+public class NettyClientHander extends SimpleChannelInboundHandler<String> {
 	
 	private Logger logger = LoggerFactory.getLogger(NettyClientHander.class);
 
 	static AtomicInteger count = new AtomicInteger(1);
 
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-    	logger.info(count.getAndIncrement() + ":" + msg);
-    }
+	@Override
+	protected void channelRead0(ChannelHandlerContext ctx, String msg)
+			throws Exception {
+
+		logger.info("Server say : " + msg);
+		if(StringUtils.isNotEmpty(msg))
+		{
+			MessageBean bean = JSON.parseObject(msg, MessageBean.class);
+			if(StringUtils.isNotEmpty(bean.getUuid()))
+			{
+				ResponseHandler handler = GuavaCache.cmd.getIfPresent(bean.getUuid());
+				
+				if(null != handler)
+				{
+					Thread.sleep(5000);
+					handler.onMsg(bean);
+					logger.info("调用NettyClientHander完成");
+				}
+				
+			}
+		}
+	}
+
+	@Override
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		logger.info("Client active ");
+		super.channelActive(ctx);
+	}
+
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		logger.info("Client close ");
+		super.channelInactive(ctx);
+	}
+
+
+   
 }

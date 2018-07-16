@@ -16,10 +16,7 @@
 
 package com.zealot.netty.learn.server;
 
-import com.zealot.netty.learn.common.protocol.ProtocolCodec;
 import com.zealot.netty.learn.handler.HelloServerHandler;
-import com.zealot.netty.learn.handler.ProtocalHandler;
-import com.zealot.netty.learn.handler.WebInstructionProtocolDecode;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -49,15 +46,12 @@ public class HelloServerInitializer extends ChannelInitializer<SocketChannel> {
 //				Delimiters.lineDelimiter()));
 
 		// 字符串解码 和 编码
-		//pipeline.addLast("decoder", new StringDecoder());
-		//pipeline.addLast("encoder", new StringEncoder());
+		pipeline.addLast("decoder", new StringDecoder());
+		pipeline.addLast("encoder", new StringEncoder());
 
 		// 自己的逻辑Handler
-		//pipeline.addLast("handler", new HelloServerHandler());
+		pipeline.addLast("handler", new HelloServerHandler());
 		
-		pipeline.addLast(new ProtocolCodec());
-		pipeline.addLast(new WebInstructionProtocolDecode());
-		pipeline.addLast(new ProtocalHandler());
 	}
 
 }

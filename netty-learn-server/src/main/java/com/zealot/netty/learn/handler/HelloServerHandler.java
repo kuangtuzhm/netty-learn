@@ -53,7 +53,7 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<String> {
     	logger.info(ctx.channel().remoteAddress() + " Say : " + msg);
            
            // 返回客户端消息 - 我已经接收到了你的消息
-            ctx.writeAndFlush("Received your message !\n");
+            ctx.writeAndFlush(msg);
     		
     }
 
@@ -68,7 +68,7 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<String> {
              
         	 logger.info("RamoteAddress : " + ctx.channel().remoteAddress() + " active !");
              
-             ctx.writeAndFlush( "Welcome to " + InetAddress.getLocalHost().getHostName() + " service!\n");
+             //ctx.writeAndFlush( "Welcome to " + InetAddress.getLocalHost().getHostName() + " service!\n");
              
              super.channelActive(ctx);
          }
