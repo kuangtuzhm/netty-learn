@@ -16,6 +16,9 @@
 
 package com.zealot.netty.learn.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.zealot.netty.learn.handler.HelloServerHandler;
 
 import io.netty.channel.ChannelInitializer;
@@ -36,9 +39,13 @@ import io.netty.handler.codec.string.StringEncoder;
  */
 public class HelloServerInitializer extends ChannelInitializer<SocketChannel> {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(HelloServerInitializer.class);
+	
 	@Override
 	protected void initChannel(SocketChannel ch) throws Exception {
 
+		LOGGER.info("建立新的channel,ip="+ch.remoteAddress());
+		
 		ChannelPipeline pipeline = ch.pipeline();
 
 		// 以("\n")为结尾分割的 解码器
